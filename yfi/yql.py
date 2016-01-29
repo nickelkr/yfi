@@ -1,27 +1,24 @@
 class Yql:
 
     def __init__(self):
-        self.statment = {'select': [],
-                         'where': [],
-                         'in': []}
+        self.compiled_str = ""
 
     def select(self, *itms):
-        self.statment['select'].append(itms)
+        self.compile("select %s from yahoo.finance.quotes" % itms)
         return self
-
-    def selects(self):
-        return self.statment['select']
 
     def where(self, *whrs):
-        self.statment['where'].append(whrs)
+        self.compile("where %s" % whrs)
         return self
-
-    def wheres(self):
-        return self.statment['where']
 
     def _in(self, *lst):
-        self.statment['in'].append(lst)
+        self.compile('in ("%s")' % lst)
         return self
 
-    def _ins(self):
-        return self.statment['in']
+    def compile(self, part):
+        if self.compiled_str:
+            part = " " + part
+        self.compiled_str += part
+
+    def compiled(self):
+        return self.compiled_str
