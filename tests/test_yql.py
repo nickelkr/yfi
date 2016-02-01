@@ -31,8 +31,10 @@ class TestYQL(unittest.TestCase):
         self.yql._in('TSLA')
         self.assertEqual(self.yql.compiled(), compiled)
 
-    def yes(self):
-        return True
+    def test_url_safe(self):
+        urlable =  'select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22TSLA%22)'
+        self.yql.select('*').where('symbol')._in('TSLA')
+
 
 
 if __name__ == '__main__':
