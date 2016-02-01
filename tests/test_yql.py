@@ -7,6 +7,7 @@ class TestYQL(unittest.TestCase):
     def setUp(self):
         self.yql = Yql()
 
+
     def test_single_select(self):
         self.yql.select('*')
         self.assertEqual(self.yql.compiled(), 'select * from yahoo.finance.quotes')
@@ -34,6 +35,7 @@ class TestYQL(unittest.TestCase):
     def test_url_safe(self):
         urlable =  'select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22TSLA%22)'
         self.yql.select('*').where('symbol')._in('TSLA')
+
 
 
 
