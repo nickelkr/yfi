@@ -15,22 +15,34 @@ class Yql:
         return self.terms
 
     def select(self, *itms):
-        self.terms.append("select %s from yahoo.finance.quotes" % itms)
+        if not itms:
+            itms = ['*']
+        self.terms.append("select %s from yahoo.finance.quotes" % ', '.join(itms))
         return self
 
-    def where(self, *whrs):
-        self.terms.append(" where %s" % whrs)
+    def where(self, whrs):
+        self.terms.append("where %s" % whrs)
         return self
 
     def _in(self, *lst):
-        self.terms.append(' in ("%s")' % lst)
+        self.terms.append('in (%s)' % ', '.join(['"%s"' % x for x in lst]))
+        return self
+
+    def _and(self):
+        self.terms.append('and')
         return self
 
     def compile(self):
         cs = ""
         for term in self.terms:
+            if cs:
+                cs += " "
             cs += term
         self.compiled_str = urllib.parse.quote(cs)
+        return self
+
+    def symbol(self, *syms):
+        self.select('*').where('symbol')._in(syms)
         return self
 
     def compiled(self):

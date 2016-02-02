@@ -13,10 +13,12 @@ class TestYQL(unittest.TestCase):
         self.assertIn('select * from yahoo.finance.quotes', self.yql.parts())
 
     def test_multi_select(self):
-        pass
+        self.yql.select('Ask', 'Bid')
+        self.assertIn('select Ask, Bid from yahoo.finance.quotes', self.yql.parts())
 
     def test_select_all(self):
-        pass
+        self.yql.select()
+        self.assertIn('select * from yahoo.finance.quotes', self.yql.parts())
 
     def test_single_where(self):
         self.yql.where('symbol')
@@ -25,6 +27,14 @@ class TestYQL(unittest.TestCase):
     def test_single__in(self):
         self.yql._in('TSLA')
         self.assertIn('in ("TSLA")', self.yql.parts())
+
+    def test_multi_in(self):
+        self.yql._in('TSLA', 'GOOG')
+        self.assertIn('in ("TSLA", "GOOG")', self.yql.parts())
+
+    def test_and(self):
+        self.yql._and()
+        self.assertIn('and', self.yql.parts())
 
     def test_chaining(self):
         self.yql.select('*').where('symbol')._in('TSLA')
@@ -41,7 +51,10 @@ class TestYQL(unittest.TestCase):
         self.assertIn('in ("TSLA")', self.yql.parts())
 
     def test_symbol(self):
-        pass
+        self.yql.symbol('TSLA')
+        self.assertIn('select * from yahoo.finance.quotes', self.yql.parts())
+        self.assertIn('where symbol', self.yql.parts())
+        self.assertIn('in ("TSLA")', self.yql.parts())
 
 
 
