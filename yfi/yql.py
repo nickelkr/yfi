@@ -11,6 +11,24 @@ class Yql:
         self.store = "store://datatables.org/alltableswithkeys"
         self.format = "json"
 
+    def set_endpoint(self, new):
+        self.endpoint = new
+
+    def get_endpoint(self):
+        return self.endpoint
+
+    def set_store(self, new):
+        self.store = "store://%s" % new
+
+    def get_store(self):
+        return self.store
+
+    def set_format(self, fmt):
+        self.format = fmt
+
+    def get_format(self):
+        return self.format
+
     def parts(self):
         return self.terms
 
@@ -31,6 +49,9 @@ class Yql:
     def _and(self):
         self.terms.append('and')
         return self
+
+    def eq(self, i):
+        self.terms.append('= %s' % i)
 
     def compile(self):
         cs = ""
