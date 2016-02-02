@@ -4,36 +4,45 @@ import urllib.parse
 class Yql:
 
     def __init__(self):
-        self.compiled_str = ""
+        self.terms = []
+        self.compiled_str = None
         self.conn = http.client.HTTPSConnection("query.yahooapis.com")
         self.endpoint = "/v1/public/yql?q="
         self.store = "store://datatables.org/alltableswithkeys"
         self.format = "json"
 
+    def parts(self):
+        return self.terms
+
     def select(self, *itms):
-        self.compile("select %s from yahoo.finance.quotes" % itms)
+        self.terms.append("select %s from yahoo.finance.quotes" % itms)
         return self
 
     def where(self, *whrs):
-        self.compile("where %s" % whrs)
+        self.terms.append(" where %s" % whrs)
         return self
 
     def _in(self, *lst):
-        self.compile('in ("%s")' % lst)
+        self.terms.append(' in ("%s")' % lst)
         return self
 
-    def compile(self, part):
-        if self.compiled_str:
-            part = " " + part
-        self.compiled_str += part
+    def compile(self):
+        cs = ""
+        for term in self.terms:
+            cs += term
+        self.compiled_str = urllib.parse.quote(cs)
+        return self
 
     def compiled(self):
         return self.compiled_str
 
     def exec(self):
-        s = urllib.parse.quote(self.compiled_str)
+        if self.compiled_str is None:
+            self.compile()
+
+        s = "%s&format=%s" % (self.compiled_str, self.format)
         s = "%s%s&env=%s" % (self.endpoint, s, urllib.parse.quote("store://datatables.org/alltableswithkeys"))
-        print(s)
+
         self.conn.request("GET", s)
         r = self.conn.getresponse()
         print(r.read())

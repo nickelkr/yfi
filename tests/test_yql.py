@@ -10,31 +10,38 @@ class TestYQL(unittest.TestCase):
 
     def test_single_select(self):
         self.yql.select('*')
-        self.assertEqual(self.yql.compiled(), 'select * from yahoo.finance.quotes')
+        self.assertIn('select * from yahoo.finance.quotes', self.yql.parts())
+
+    def test_multi_select(self):
+        pass
+
+    def test_select_all(self):
+        pass
 
     def test_single_where(self):
         self.yql.where('symbol')
-        self.assertEqual(self.yql.compiled(), 'where symbol')
+        self.assertIn('where symbol', self.yql.parts())
 
     def test_single__in(self):
         self.yql._in('TSLA')
-        self.assertEqual(self.yql.compiled(), 'in ("TSLA")')
+        self.assertIn('in ("TSLA")', self.yql.parts())
 
     def test_chaining(self):
-        compiled = 'select * from yahoo.finance.quotes where symbol in ("TSLA")'
         self.yql.select('*').where('symbol')._in('TSLA')
-        self.assertEqual(self.yql.compiled(), compiled)
+        self.assertIn('select * from yahoo.finance.quotes', self.yql.parts())
+        self.assertIn('where symbol', self.yql.parts())
+        self.assertIn('in ("TSLA")', self.yql.parts())
 
     def test_sequence(self):
-        compiled = 'select * from yahoo.finance.quotes where symbol in ("TSLA")'
         self.yql.select('*')
         self.yql.where('symbol')
         self.yql._in('TSLA')
-        self.assertEqual(self.yql.compiled(), compiled)
+        self.assertIn('select * from yahoo.finance.quotes', self.yql.parts())
+        self.assertIn('where symbol', self.yql.parts())
+        self.assertIn('in ("TSLA")', self.yql.parts())
 
-    def test_url_safe(self):
-        urlable =  'select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22TSLA%22)'
-        self.yql.select('*').where('symbol')._in('TSLA')
+    def test_symbol(self):
+        pass
 
 
 
