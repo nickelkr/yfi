@@ -1,4 +1,5 @@
 # YFi
+[![Build Status](https://travis-ci.org/nickelkr/yfi.svg?branch=master)](https://travis-ci.org/nickelkr/yfi)
 Yahoo! YQL library with tools focusing on the finance portion (eventually).
 
 **Description**
