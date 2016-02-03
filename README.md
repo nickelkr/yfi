@@ -2,6 +2,7 @@
 Yahoo! YQL library with tools focusing on the finance portion (eventually).
 
 **Description**
+
 YFi allows you to create and run queries against Yahoo's YQL datatables using a 
 object oriented methodology.
 
@@ -20,6 +21,7 @@ You can also set YQL variables, the following of which are supported:
 The plan is to also provide tools to use specifically with the finance tables.
 
 **Usage**
+
 The following is a example that returns all the data from the yahoo.finance.quotes table for the symbols 'TSLA' and 'GOOG'
 ```python
 from yfi.yql import Yql
@@ -39,10 +41,12 @@ y.symbol('TSLA', 'GOOG')
 j = y.exec()
 ```
 **Upcoming Features**
+
   - Better error handling
   - Processing of the JSON response into a class that provides facilities for applying analytics easily
 
 **Running Tests**
+
 To run all tests:
 python -m unittest discover
 
