@@ -45,6 +45,9 @@ j = y.exec()
 
   - Better error handling
   - Processing of the JSON response into a class that provides facilities for applying analytics easily
+  - Support for API tokens
+  - Stored queries
+  - Interval execution
 
 **Running Tests**
 
