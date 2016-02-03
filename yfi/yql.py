@@ -1,5 +1,6 @@
 import http.client
 import urllib.parse
+import json
 
 class Yql:
 
@@ -10,15 +11,22 @@ class Yql:
         self.endpoint = "/v1/public/yql?q="
         self.store = "store://datatables.org/alltableswithkeys"
         self.format = "json"
+        self.table = 'yahoo.finance.quotes'
 
-    def set_endpoint(self, new):
-        self.endpoint = new
+    def set_endpoint(self, endpoint):
+        self.endpoint = endpoint
 
     def get_endpoint(self):
         return self.endpoint
 
-    def set_store(self, new):
-        self.store = "store://%s" % new
+    def set_table(self, table):
+        self.table = table
+
+    def get_table(self):
+        return self.table
+
+    def set_store(self, store):
+        self.store = "store://%s" % store
 
     def get_store(self):
         return self.store
@@ -35,7 +43,7 @@ class Yql:
     def select(self, *itms):
         if not itms:
             itms = ['*']
-        self.terms.append("select %s from yahoo.finance.quotes" % ', '.join(itms))
+        self.terms.append("select %s from %s" % (', '.join(itms), self.table))
         return self
 
     def where(self, whrs):
@@ -74,9 +82,9 @@ class Yql:
             self.compile()
 
         s = "%s&format=%s" % (self.compiled_str, self.format)
-        s = "%s%s&env=%s" % (self.endpoint, s, urllib.parse.quote("store://datatables.org/alltableswithkeys"))
+        s = "%s%s&env=%s" % (self.endpoint, s, urllib.parse.quote(self.store))
 
         self.conn.request("GET", s)
         r = self.conn.getresponse()
-        print(r.read())
+        return json.loads(r.read().decode('UTF-8'))
 
