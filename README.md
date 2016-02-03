@@ -5,8 +5,7 @@ Yahoo! YQL library with tools focusing on the finance portion (eventually).
 
 **Description**
 
-YFi allows you to create and run queries against Yahoo's YQL datatables using a 
-object oriented methodology.
+YFi allows you to create and run queries against Yahoo's YQL datatables.
 
 It is currently in the beginning stages and supports the following YQL statments:
   - select
