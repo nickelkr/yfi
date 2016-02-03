@@ -32,25 +32,30 @@ class Yql:
         return self.store
 
     def set_format(self, fmt):
+        """This should probably be restricted to xml or json"""
         self.format = fmt
 
     def get_format(self):
         return self.format
 
     def parts(self):
+        """Return the individual parts of the statement in an array"""
         return self.terms
 
     def select(self, *itms):
+        """Joins the items to be selected and inserts the current table name"""
         if not itms:
             itms = ['*']
         self.terms.append("select %s from %s" % (', '.join(itms), self.table))
         return self
 
     def where(self, whrs):
+        """Build the where clause"""
         self.terms.append("where %s" % whrs)
         return self
 
     def _in(self, *lst):
+        """Build out the in clause. Using _in due to shadowing for in"""
         self.terms.append('in (%s)' % ', '.join(['"%s"' % x for x in lst]))
         return self
 
@@ -62,6 +67,8 @@ class Yql:
         self.terms.append('= %s' % i)
 
     def compile(self):
+        """Take all of the 'parts' components and build the complete query to be passed
+           to Yahoo YQL"""
         cs = ""
         for term in self.terms:
             if cs:
@@ -71,20 +78,30 @@ class Yql:
         return self
 
     def symbol(self, *syms):
+        """Shortcut for getting everything on 'symbol'. This will use the table that is
+           currently set"""
         self.select('*').where('symbol')._in(syms)
         return self
 
     def compiled(self):
+        """Return the compiled str for the user to see. This will already be URL encoded
+           though"""
         return self.compiled_str
 
     def exec(self):
-        if self.compiled_str is None:
-            self.compile()
+        """Execute the query inside of self.compiled_str. This method returns a JSON
+           object for easy manipulation unless another format is specified"""
+        self.compile()
 
         s = "%s&format=%s" % (self.compiled_str, self.format)
         s = "%s%s&env=%s" % (self.endpoint, s, urllib.parse.quote(self.store))
 
         self.conn.request("GET", s)
         r = self.conn.getresponse()
-        return json.loads(r.read().decode('UTF-8'))
+        r = r.read().decode('UTF-8')
+        if self.format is "json":
+            return json.loads(r)
+        else:
+            return r
+
 
