@@ -9,8 +9,9 @@ object oriented methodology.
 It is currently in the beginning stages and supports the following YQL statments:
   - select
   - where
-  - in
-  - equal
+  - in (_in)
+  - and (_and)
+  - equal (eq)
 
 You can also set YQL variables, the following of which are supported:
   - store
