@@ -32,7 +32,7 @@ y = Yql()
 # this object supports chaining so we can build our query in one line. select() defaults to '*'
 y.select().where('symbol')._in('TSLA', 'GOOG')
 # the exec() method returns a json object unless format has been changed otherwise
-j = y.exec()
+j = y.run()
 ```
 The following is a shortcut for the above. It will select('*') from whatever table is set (default: yahoo.finance.quotes)
 for the given symbol(s)
@@ -40,7 +40,7 @@ for the given symbol(s)
 from yfi.yql import Yql
 y = Yql()
 y.symbol('TSLA', 'GOOG')
-j = y.exec()
+j = y.run()
 ```
 **Upcoming Features**
 
