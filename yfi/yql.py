@@ -88,7 +88,7 @@ class Yql:
            though"""
         return self.compiled_str
 
-    def get(self):
+    def run(self):
         """Execute the query inside of self.compiled_str. This method returns a JSON
            object for easy manipulation unless another format is specified"""
         self.compile()
